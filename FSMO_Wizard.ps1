@@ -64,7 +64,7 @@ function Transfer-Roles {
 
 Write-Host "This script will transfer the whatever FSMO roles you choose to the Server name provided.  Proceed with caution."
 
-$serverName = Read-Host "Please enter the name of server you would like to transfer roles to:  "
+$serverName = Read-Host "Please enter the name of the server you would like to transfer roles to:  "
 $confirm = YN-Menu -Title "Please Confirm." -Question "Are you sure you would like to proceed?"
 
 if ($confirm -eq 'Yes'){

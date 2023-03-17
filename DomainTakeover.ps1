@@ -62,24 +62,9 @@ function Transfer-Roles {
 
 }
 
-Write-Host "This script will transfer the whatever FSMO roles you choose to the Server name provided. It's best to run this script from the DC you're transfering roles from. Proceed with caution."
+function Demote-DC {
 
-$serverName = Read-Host "Please enter the name of the server you would like to transfer roles to:  "
-
-Write-Host "Confirming Domain replication first..."
-
-repadmin /showrepl
-
-$confirm = YN-Menu -Title "Please Confirm." -Question "Does replication look good? Are you sure you would like to proceed?"
-
-if ($confirm -eq "Yes"){
-    $choice = FSMO-Selector
-    Transfer-Roles -Role $choice -Identity $serverName
-}else{
-    Break
-}
-
-$remove = YN-Menu -Title "Please Confirm" -Question "Do you wish to Demote the server you're currently worknig on as well?"
+$remove = YN-Menu -Title "Please Confirm" -Question "Do you wish to Demote the server you're currently working on as well?"
 
 if($remove -eq "Yes"){
     Write-Host "Testing Demotion first, please fix any issues found before proceeding."
@@ -90,3 +75,27 @@ if($remove -eq "Yes"){
 }else{
     Break
 }
+
+}
+
+do {
+    Write-Host "This script will transfer the whatever FSMO roles you choose to the Server name provided. It's best to run this script from the DC you're transfering roles from. Proceed with caution."
+    $serverName = Read-Host "Please enter the name of the server you would like to transfer roles to:  "
+    Write-Host "Confirming Domain replication first..."
+    repadmin /showrepl
+    $confirm = YN-Menu -Title "Please Confirm." -Question "Does replication look good? Are you sure you would like to proceed?"
+
+    if ($confirm -eq "Yes"){
+        $choice = FSMO-Selector
+        Transfer-Roles -Role $choice -Identity $serverName
+    }else{
+        Break
+    }
+
+    if ($choice -eq "all"){
+        Demote-DC
+    }
+
+    $end = YN-Menu -Title "Please Confirm" -Question "Do you need to do anything else?"
+
+}until ($end -eq "No")

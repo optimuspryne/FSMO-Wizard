@@ -87,7 +87,11 @@ do {
 
     if ($confirm -eq "Yes"){
         $choice = FSMO-Selector
-        Transfer-Roles -Role $choice -Identity $serverName
+        if ($choice -eq "cancel"){
+          Break
+        }else{
+          Transfer-Roles -Role $choice -Identity $serverName
+        }
     }else{
         Break
     }

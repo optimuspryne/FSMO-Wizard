@@ -70,7 +70,7 @@ if($remove -eq "Yes"){
     Write-Host "Testing Demotion first, please fix any issues found before proceeding."
     Test-ADDSDomainControllerUninstallation -RemoveApplicationPartitions
     Read-Host "Testing complete, press ENTER to continue..."
-    Uninstall-ADDSDomainController -RemoveDnsDelegation -RemoveApplicationPartitions -Confirm
+    Uninstall-ADDSDomainController -RemoveApplicationPartitions -NoRebootOnCompletion -Confirm
     Uninstall-WindowsFeature AD-Domain-Services -IncludeManagementTools
 }else{
     Break
@@ -91,7 +91,7 @@ do {
           Break
         }else{
           Transfer-Roles -Role $choice -Identity $serverName
-        }
+        }       
     }else{
         Break
     }
@@ -103,3 +103,6 @@ do {
     $end = YN-Menu -Title "Please Confirm" -Question "Do you need to do anything else?"
 
 }until ($end -eq "No")
+
+Suspend-BitLocker -MountPoint C: -RebootCount 2
+Reboot-Computer

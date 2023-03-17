@@ -62,14 +62,31 @@ function Transfer-Roles {
 
 }
 
-Write-Host "This script will transfer the whatever FSMO roles you choose to the Server name provided.  Proceed with caution."
+Write-Host "This script will transfer the whatever FSMO roles you choose to the Server name provided. It's best to run this script from the DC you're transfering roles from. Proceed with caution."
 
 $serverName = Read-Host "Please enter the name of the server you would like to transfer roles to:  "
-$confirm = YN-Menu -Title "Please Confirm." -Question "Are you sure you would like to proceed?"
 
-if ($confirm -eq 'Yes'){
+Write-Host "Confirming Domain replication first..."
+
+repadmin /showrepl
+
+$confirm = YN-Menu -Title "Please Confirm." -Question "Does replication look good? Are you sure you would like to proceed?"
+
+if ($confirm -eq "Yes"){
     $choice = FSMO-Selector
     Transfer-Roles -Role $choice -Identity $serverName
-}else {
-    break
+}else{
+    Break
+}
+
+$remove = YN-Menu -Title "Please Confirm" -Question "Do you wish to Demote the server you're currently worknig on as well?"
+
+if($remove -eq "Yes"){
+    Write-Host "Testing Demotion first, please fix any issues found before proceeding."
+    Test-ADDSDomainControllerUninstallation -RemoveApplicationPartitions
+    Read-Host "Testing complete, press ENTER to continue..."
+    Uninstall-ADDSDomainController -RemoveDnsDelegation -RemoveApplicationPartitions -Confirm
+    Uninstall-WindowsFeature AD-Domain-Services -IncludeManagementTools
+}else{
+    Break
 }

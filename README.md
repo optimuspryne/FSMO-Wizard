@@ -1,2 +1,2 @@
-# FSMO_Wizard
+# allYourDomain
 Script to transfer one to many FSMO Roles to specified DC

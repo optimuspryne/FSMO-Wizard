@@ -105,4 +105,4 @@ do {
 }until ($end -eq "No")
 
 Suspend-BitLocker -MountPoint C: -RebootCount 2
-Reboot-Computer
+Restart-Computer

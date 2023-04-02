@@ -1,3 +1,6 @@
+# This script will transfer FSMO roles and, optionally, demote the old
+# Domain Controller
+
 function FSMO-Selector {
      
     $all = New-Object System.Management.Automation.Host.ChoiceDescription '&All', 'Answer: All'
@@ -64,19 +67,21 @@ function Transfer-Roles {
 
 function Demote-DC {
 
-$remove = YN-Menu -Title "Please Confirm" -Question "Do you wish to Demote the server you're currently working on as well?"
+    $remove = YN-Menu -Title "Please Confirm" -Question "Do you wish to Demote the server you're currently working on as well?"
 
-if($remove -eq "Yes"){
-    Write-Host "Testing Demotion first, please fix any issues found before proceeding."
-    Test-ADDSDomainControllerUninstallation -RemoveApplicationPartitions
-    Read-Host "Testing complete, press ENTER to continue..."
-    Uninstall-ADDSDomainController -RemoveApplicationPartitions -NoRebootOnCompletion -Confirm
-    Uninstall-WindowsFeature AD-Domain-Services -IncludeManagementTools
-}else{
-    Break
+    if($remove -eq "Yes"){
+        Write-Host "Testing Demotion first, please fix any issues found before proceeding."
+        Test-ADDSDomainControllerUninstallation -RemoveApplicationPartitions
+        Read-Host "Testing complete, press ENTER to continue..."
+        Uninstall-ADDSDomainController -RemoveApplicationPartitions -NoRebootOnCompletion -Confirm
+        Uninstall-WindowsFeature AD-Domain-Services -IncludeManagementTools
+    }else{
+        Break
+    }
+
 }
 
-}
+# Main script block
 
 do {
     Write-Host "This script will transfer the whatever FSMO roles you choose to the Server name provided. It's best to run this script from the DC you're transfering roles from. Proceed with caution."

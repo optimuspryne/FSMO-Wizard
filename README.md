@@ -21,14 +21,7 @@ This script should be used with caution and only by experienced system administr
 
 #### FSMO-Selector
 
-This function prompts the user to select which FSMO roles to transfer. The options are:
-
-    All
-    PDCEmulator
-    RIDMaster
-    InfrastructureMaster
-    SchemaMaster
-    DomainNamingMaster
+This function prompts the user to select which FSMO roles to transfer.
 
 #### YN-Menu
 
